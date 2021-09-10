@@ -6,7 +6,7 @@ from torch.utils.data import DataLoader
 # Dataset を作成する。
 dataset = wd2.Wine("https://git.io/JfodD")
 # DataLoader を作成する。
-dataloader = DataLoader(dataset, batch_size=64)
+dataloader = DataLoader(dataset, batch_size=10)
 
 class NeuralNetwork(nn.Module):
     def __init__(self):
@@ -29,7 +29,7 @@ class NeuralNetwork(nn.Module):
 model = NeuralNetwork()
 
 learning_rate = 1e-3
-batch_size = 64
+batch_size = 10
 epochs = 10
 
 loss_fn = nn.CrossEntropyLoss()

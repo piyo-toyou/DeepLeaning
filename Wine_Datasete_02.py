@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import torch
 from sklearn.preprocessing import normalize
 from torch.utils.data import Dataset
@@ -7,8 +8,8 @@ class Wine(Dataset):
     def __init__(self, csv_path):
         # csv ファイルを読み込む。
         df = pd.read_csv(csv_path)
-        data = df.iloc[:, 1:]  # データ (2 ~ 14列目)
-        labels = df.iloc[:, 0]  # ラベル (1列目)
+        data = np.array(df.iloc[:, 1:])  # データ (2 ~ 14列目)
+        labels = np.array(df.iloc[:, 0])  # ラベル (1列目)
         # データを標準化する。
         data = normalize(data)
         # クラス ID を 0 始まりにする。[1, 2, 3] -> [0, 1, 2]
