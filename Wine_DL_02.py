@@ -1,26 +1,29 @@
-import Wine_Datasete_02 as wd2
+import Wine_Datasete_10 as wd10
 import torch
 from torch import nn
 from torch.utils.data import DataLoader
+import matplotlib.pyplot as plt
 
 # Dataset を作成する。
-dataset = wd2.Wine("C:/Users/S2212357/Documents/Z6_DataBase/DeepLeaning/wine.csv")
-testset = wd2.Wine("C:/Users/S2212357/Documents/Z6_DataBase/DeepLeaning/wine_test.csv")
+dataset = wd10.Wine("C:/Users/S2212357/Documents/Z6_DataBase/DeepLeaning/winequality-red.csv")
+n_samples = len(dataset)
+train_size = int(len(dataset) * 0.8)
+test_size = n_samples - train_size
+train_dataset, test_dataset = torch.utils.data.random_split(dataset, [train_size, test_size])
 # DataLoader を作成する。
-train_dataloader = DataLoader(dataset, batch_size=10, shuffle=True)
-test_dataloader = DataLoader(testset, batch_size=10, shuffle=True)
+train_dataloader = DataLoader(train_dataset, batch_size=50, shuffle=True)
+test_dataloader = DataLoader(test_dataset, batch_size=50, shuffle=True)
 
 class NeuralNetwork(nn.Module):
     def __init__(self):
         super(NeuralNetwork, self).__init__()
         self.linear_relu_stack = nn.Sequential(
-            nn.Linear(13, 100),
+            nn.Linear(11, 50),
             nn.RReLU(),
-            nn.Dropout(0.2),
-            nn.Linear(100, 10),
+            nn.Linear(50, 10),
             nn.RReLU(),
-            nn.Linear(10, 3),
-            nn.RReLU()
+            nn.Linear(10, 6),
+            nn.Softmax()
         )
 
     def forward(self, x):
@@ -30,8 +33,7 @@ class NeuralNetwork(nn.Module):
 model = NeuralNetwork()
 
 learning_rate = 1e-3
-batch_size = 10
-epochs = 200
+epochs = 1000
 
 loss_fn = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
@@ -46,7 +48,7 @@ def train_loop(dataloader, model, loss_fn, optimizer):
     loss.backward()
     optimizer.step()
 
-    if batch % 100 == 0:
+    if batch % 10 == 0:
       loss, current = loss.item(), batch * len(X)
       print(f"loss: {loss:>7f} [{current:>5d}/{size:>5d}]")
 
