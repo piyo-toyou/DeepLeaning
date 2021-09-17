@@ -13,7 +13,7 @@ class Housing(Dataset):
         data = torch.tensor(x.values, dtype=torch.float32)  # データ (2 ~ 14列目)
         labels = torch.tensor(t.values, dtype=torch.float32)  # ラベル (1列目)
         # データを標準化する。
-        data = torch.from_numpy(normalize(data)).float()
+        # data = torch.from_numpy(normalize(data)).float()
 
         self.data = data
         self.labels = labels
