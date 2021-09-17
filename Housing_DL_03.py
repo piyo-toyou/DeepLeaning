@@ -1,8 +1,10 @@
+from typing import NewType
 import Housing_Datasete_01 as hd01
 import torch
 from torch import nn
 from torch.utils.data import DataLoader
 import matplotlib.pyplot as plt
+import numpy as np
 
 # Dataset を作成する。
 dataset = hd01.Housing("C:/Users/S2212357/Documents/Z6_DataBase/DeepLeaning/housing.csv")
@@ -19,6 +21,7 @@ class NeuralNetwork(nn.Module):
         super(NeuralNetwork, self).__init__()
         self.linear_relu_stack = nn.Sequential(
             nn.Linear(13, 50),
+            nn.BatchNorm1d(50),
             nn.RReLU(),
             nn.Linear(50, 10),
             nn.RReLU(),
@@ -50,7 +53,7 @@ def train_loop(dataloader, model, loss_fn, optimizer):
 
 def test_loop(dataloader, model, loss_fn):
     size = len(dataloader.dataset)
-    test_loss, correct = 0, 0
+    test_loss = 0
     with torch.no_grad():
         for X, y in dataloader:
             pred = model(X).squeeze()
@@ -66,8 +69,11 @@ def plot_history(dict):
 
 def plot_result(x, y):
     plt.figure
-    plt.plot(x, y)
-    # plt.ylim(0, 30)
+    a = np.arange(1,len(x)+1)
+    plt.scatter(a, x)
+    plt.scatter(a, y)
+    plt.xlim(0, 51)
+    plt.ylim(5, 40)
     plt.show()
 
 for t in range(epochs):
@@ -79,12 +85,9 @@ for t in range(epochs):
         print(f"loss: {b}")
 print("Done!")
 
-plot_history(history)
+# plot_history(history)
 
-val = torch.tensor([[0.80271,0,8.14,0,0.538,5.456,36.6,3.7965,4,307,21,288.99,11.69],
-[0.17505,0,5.96,0,0.499,5.966,30.2,3.8473,5,279,19.2,393.43,10.13],
-[0.34006,0,21.89,0,0.624,6.458,98.9,2.1185,4,437,21.2,395.04,12.6]])
-y2 = torch.tensor([20.2,24.7,19.2])
-pred2 = model(val)
+val, y2 = next(iter(test_dataloader))
+pred2 = model(val).detach().numpy().squeeze()
 print(pred2)
 plot_result(pred2, y2)
