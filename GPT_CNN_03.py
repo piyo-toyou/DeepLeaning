@@ -1,8 +1,6 @@
 import numpy as np
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
 from sklearn.model_selection import train_test_split
 
 # 5つの100x100の2次元配列を用意
@@ -37,7 +35,7 @@ sampled_non_collapse_indices = np.random.choice(non_collapse_indices, size=num_s
 balanced_indices = np.concatenate((collapse_indices, sampled_non_collapse_indices))
 
 # サンプリングされたデータとターゲットを取得
-X_balanced = X[balanced_indices]
+X_balanced = input_data[balanced_indices]
 y_balanced = target_data[balanced_indices]
 
 # データの分割
