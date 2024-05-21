@@ -2,9 +2,11 @@ import numpy as np
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from sklearn.model_selection import train_test_split
+import matplotlib.pyplot as plt
+
 
 # 5つの100x100の2次元配列を用意
-arrays = [np.random.rand(100, 100) for _ in range(5)]
+arrays = [np.random.rand(300, 300) for _ in range(5)]
 
 # それぞれの2次元配列を1次元に変換
 flattened_arrays = [array.flatten() for array in arrays]
@@ -55,9 +57,24 @@ model = Sequential([
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
 # モデルの訓練
-history = model.fit(X_train, y_train, epochs=10, batch_size=32, validation_data=(X_test, y_test))
+history = model.fit(X_train, y_train, epochs=50, batch_size=300, validation_data=(X_test, y_test))
 
 # モデルの評価
 loss, accuracy = model.evaluate(X_test, y_test, verbose=0)
 print(f"Test Loss: {loss:.4f}")
 print(f"Test Accuracy: {accuracy:.4f}")
+
+# 訓練履歴から精度のデータを取得
+train_acc = history.history['accuracy']
+val_acc = history.history['val_accuracy']
+epochs = range(1, len(train_acc) + 1)
+
+# 訓練と検証の精度をプロット
+plt.figure(figsize=(10, 6))
+plt.plot(epochs, train_acc, 'bo-', label='Training accuracy')
+# plt.plot(epochs, val_acc, 'ro-', label='Validation accuracy')
+plt.title('Training and Validation Accuracy')
+plt.xlabel('Epochs')
+plt.ylabel('Accuracy')
+plt.legend()
+plt.show()
